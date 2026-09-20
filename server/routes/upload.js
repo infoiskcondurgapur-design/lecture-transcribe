@@ -6,10 +6,14 @@ import { handleUpload } from '@vercel/blob/client';
 import { del } from '@vercel/blob';
 import { requireAdmin, isAdmin } from '../middleware.js';
 
-const AUDIO_DIR = path.resolve(import.meta.dirname, '..', 'public', 'audio');
-if (!fs.existsSync(AUDIO_DIR)) fs.mkdirSync(AUDIO_DIR, { recursive: true });
-
 const BLOB_MODE = !!process.env.BLOB_READ_WRITE_TOKEN;
+
+const AUDIO_DIR = path.resolve(import.meta.dirname, '..', 'public', 'audio');
+if (!BLOB_MODE && !fs.existsSync(AUDIO_DIR)) {
+  try {
+    fs.mkdirSync(AUDIO_DIR, { recursive: true });
+  } catch {}
+}
 
 const ALLOWED_EXT = ['.mp3', '.m4a', '.wav', '.ogg', '.webm', '.mp4'];
 const ALLOWED_MIME = [
