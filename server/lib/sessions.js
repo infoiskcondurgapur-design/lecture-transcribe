@@ -1,9 +1,13 @@
 import crypto from 'node:crypto';
 
+if (!process.env.SESSION_SECRET) throw new Error('SESSION_SECRET is required');
+
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 function secret() {
-  return process.env.SESSION_SECRET || 'dev-session-secret-change-me';
+  const s = process.env.SESSION_SECRET;
+  if (!s) throw new Error('SESSION_SECRET is required');
+  return s;
 }
 
 function sign(value) {

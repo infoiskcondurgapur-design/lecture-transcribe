@@ -1,12 +1,14 @@
 import { all, get, run } from '../db.js';
 import { requireAdmin } from '../middleware.js';
 
-const FIELDS = ['title', 'speaker', 'type', 'location', 'date', 'duration', 'audio_file', 'excerpt', 'transcript'];
+const MAXLEN = { title: 200, speaker: 100, type: 50, location: 100, date: 10, duration: 20, audio_file: 500, excerpt: 1000, transcript: 50000 };
 
 function cleanBody(body) {
   const out = {};
   for (const f of FIELDS) {
     let v = body && typeof body[f] === 'string' ? body[f].trim() : '';
+    const max = MAXLEN[f] ?? 1000;
+    if (v.length > max) v = v.slice(0, max);
     if (f === 'date' && v && !/^\d{4}-\d{2}-\d{2}$/.test(v)) {
       const m = v.match(/^(\d{4})?-?(\d{2})?-?(\d{2})?/);
       if (m) {
