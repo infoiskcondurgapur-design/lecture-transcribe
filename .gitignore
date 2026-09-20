@@ -18,3 +18,5 @@ client/vite.err.log
 client/vite.pid
 .DS_Store
 Thumbs.db
+.vercel
+.env*
