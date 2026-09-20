@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.vercel/
+
+# local data & secrets
+server/.env
+server.data/
+server/data/
+server/public/audio/*
+!server/public/audio/.gitkeep
+server/*.log
+server/data/server.pid
+
+# misc
+shots/
+client/vite.log
+client/vite.err.log
+client/vite.pid
+.DS_Store
+Thumbs.db

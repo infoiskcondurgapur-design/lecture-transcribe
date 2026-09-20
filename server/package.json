@@ -1,0 +1,23 @@
+{
+  "name": "lecture-archive-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --watch index.js",
+    "start": "node --env-file-if-exists=.env index.js",
+    "seed": "node --env-file-if-exists=.env seed.js",
+    "migrate:to-turso": "node --env-file-if-exists=.env scripts/migrate-to-turso.js"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "@vercel/blob": "^2.8.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "multer": "^2.4.0"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^12.2.0"
+  }
+}

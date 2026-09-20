@@ -1,0 +1,20 @@
+{
+  "name": "lecture-archive",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Lecture transcription archive (prabhupadavani-style)",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm:dev -w server\" \"npm:dev -w client\"",
+    "seed": "npm run seed -w server",
+    "build": "npm run build -w client",
+    "start": "npm run start -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
