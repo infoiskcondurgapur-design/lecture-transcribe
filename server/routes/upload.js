@@ -41,13 +41,20 @@ const EXT_FOR_MIME = {
 };
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: AUDIO_DIR,
-    filename: (req, file, cb) => {
-      const ext = EXT_FOR_MIME[file.mimetype] || path.extname(file.originalname).toLowerCase();
-      cb(null, `${Date.now()}-${crypto.randomBytes(4).toString('hex')}${ext}`);
-    },
-  }),
+  storage: BLOB_MODE
+    ? multer.memoryStorage()
+    : multer.diskStorage({
+        destination: (req, file, cb) => {
+          try {
+            fs.mkdirSync(AUDIO_DIR, { recursive: true });
+          } catch {}
+          cb(null, AUDIO_DIR);
+        },
+        filename: (req, file, cb) => {
+          const ext = EXT_FOR_MIME[file.mimetype] || path.extname(file.originalname).toLowerCase();
+          cb(null, `${Date.now()}-${crypto.randomBytes(4).toString('hex')}${ext}`);
+        },
+      }),
   limits: { fileSize: 300 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
