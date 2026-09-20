@@ -2,13 +2,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const dataDir = path.resolve(import.meta.dirname, 'data');
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 const url =
   process.env.TURSO_DATABASE_URL ||
   'file:' + path.join(dataDir, 'archive.db').replace(/\\/g, '/');
 
 const isRemote = url.startsWith('libsql:') || url.startsWith('https:');
+if (!isRemote && !fs.existsSync(dataDir)) {
+  try {
+    fs.mkdirSync(dataDir, { recursive: true });
+  } catch {}
+}
 const { createClient } = isRemote
   ? await import('@libsql/client/web')
   : await import('@libsql/client');
