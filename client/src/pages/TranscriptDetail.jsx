@@ -75,7 +75,7 @@ export default function TranscriptDetail() {
 
       <div className="transcript-box">
         <h2>Transcript</h2>
-        <div className="transcript-text" onContextMenu={(e) => e.preventDefault()}>{lec.transcript}</div>
+        <div className="transcript-text" onCopy={(e) => e.preventDefault()} onCut={(e) => e.preventDefault()} onContextMenu={(e) => e.preventDefault()}>{lec.transcript}</div>
       </div>
     </div>
   );
