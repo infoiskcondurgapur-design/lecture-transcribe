@@ -1,6 +1,7 @@
 import { all, get, run } from '../db.js';
 import { requireAdmin } from '../middleware.js';
 
+const FIELDS = ['title', 'speaker', 'type', 'location', 'date', 'duration', 'audio_file', 'excerpt', 'transcript'];
 const MAXLEN = { title: 200, speaker: 100, type: 50, location: 100, date: 10, duration: 20, audio_file: 500, excerpt: 1000, transcript: 50000 };
 
 function cleanBody(body) {
