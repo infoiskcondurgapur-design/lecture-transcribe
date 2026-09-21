@@ -6,7 +6,6 @@ export default function TranscriptDetail() {
   const { id } = useParams();
   const [lec, setLec] = useState(null);
   const [err, setErr] = useState('');
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     api
@@ -14,17 +13,6 @@ export default function TranscriptDetail() {
       .then((r) => setLec(r.lecture))
       .catch((e) => setErr(e.message));
   }, [id]);
-
-  async function copyText() {
-    if (!lec) return;
-    try {
-      await navigator.clipboard.writeText(lec.transcript);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      /* clipboard unavailable */
-    }
-  }
 
   if (err) return <div className="wrap"><div className="alert alert-error">{err}</div></div>;
   if (!lec) return <div className="wrap"><div className="panel empty">Loading&hellip;</div></div>;
@@ -86,12 +74,7 @@ export default function TranscriptDetail() {
       {lec.excerpt && <p className="muted" style={{ marginTop: 10 }}>{lec.excerpt}</p>}
 
       <div className="transcript-box">
-        <h2>
-          Transcript
-          <button className="btn btn-ghost" onClick={copyText}>
-            {copied ? 'Copied!' : 'Copy text'}
-          </button>
-        </h2>
+        <h2>Transcript</h2>
         <div className="transcript-text">{lec.transcript}</div>
       </div>
     </div>
