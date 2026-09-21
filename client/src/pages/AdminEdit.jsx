@@ -79,7 +79,7 @@ export default function AdminEdit() {
     setErr('');
     try {
       const r = await api.uploadAudio(file);
-      if (audioFile) await api.detachAudio(audioFile);
+      if (audioFile && !/^https?:\/\//.test(audioFile)) await api.detachAudio(audioFile);
       setAudioFile(r.audio_file);
       fileRef.current.value = '';
     } catch (ex) {
@@ -180,6 +180,15 @@ export default function AdminEdit() {
 
           <div className="field">
             <label>Audio file (mp3, m4a, wav&hellip;)</label>
+            <div className="upload-row" style={{ marginTop: 4 }}>
+              <input
+                type="url"
+                placeholder="Paste audio URL&hellip;"
+                value={audioFile && /^https?:\/\//.test(audioFile) ? audioFile : ''}
+                onChange={(e) => setAudioFile(e.target.value.trim())}
+                style={{ flex: 1 }}
+              />
+            </div>
             {audioFile ? (
               <div className="upload-row">
                 <span className="audio-chip">&#128266; {audioFile}</span>
