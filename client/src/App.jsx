@@ -24,7 +24,6 @@ function Header() {
           </NavLink>
           <NavLink to="/transcriptions">Transcriptions</NavLink>
           <NavLink to="/search">Search</NavLink>
-          <NavLink to="/admin">Admin</NavLink>
         </nav>
       </div>
     </header>
