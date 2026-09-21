@@ -33,12 +33,10 @@ export default function AdminEdit() {
   const [authed, setAuthed] = useState(null);
   const [form, setForm] = useState(EMPTY);
   const [audioFile, setAudioFile] = useState('');
-  const [audioPlaying, setAudioPlaying] = useState(false);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState('');
   const fileRef = useRef();
-  const audioRef = useRef();
 
   useEffect(() => {
     api
@@ -79,7 +77,6 @@ export default function AdminEdit() {
     if (!file) return;
     setUploading(true);
     setErr('');
-    setAudioPlaying(false);
     try {
       const r = await api.uploadAudio(file);
       if (audioFile && !/^https?:\/\//.test(audioFile)) await api.detachAudio(audioFile);
@@ -93,7 +90,6 @@ export default function AdminEdit() {
   }
 
   async function removeAudio() {
-    setAudioPlaying(false);
     if (!audioFile) return;
     setBusy(true);
     try {
@@ -196,10 +192,7 @@ export default function AdminEdit() {
             {audioFile ? (
               <div className="upload-row">
                 <span className="audio-chip">&#128266; {audioFile}</span>
-                <audio ref={audioRef} src={audioSrc(audioFile)} preload="none" onEnded={() => setAudioPlaying(false)} onPause={() => setAudioPlaying(false)} onPlay={() => setAudioPlaying(true)} style={{ display: 'none' }} />
-                <button className="btn btn-ghost" onClick={() => { if (audioRef.current) { if (audioPlaying) audioRef.current.pause(); else audioRef.current.play(); } }}>
-                  {audioPlaying ? 'Pause' : 'Play'}
-                </button>
+                <audio controls src={audioSrc(audioFile)} style={{ maxWidth: 240 }} />
                 <button type="button" className="btn btn-danger" disabled={busy} onClick={removeAudio}>
                   Remove
                 </button>
