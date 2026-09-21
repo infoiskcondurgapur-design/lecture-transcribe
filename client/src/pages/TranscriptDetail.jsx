@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api, formatDate, audioSrc } from '../api';
 
@@ -6,6 +6,8 @@ export default function TranscriptDetail() {
   const { id } = useParams();
   const [lec, setLec] = useState(null);
   const [err, setErr] = useState('');
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef();
 
   useEffect(() => {
     api
@@ -66,7 +68,10 @@ export default function TranscriptDetail() {
 
         {lec.audio_file && (
           <div className="audio-box">
-            <audio controls preload="none" src={audioSrc(lec.audio_file)} />
+            <audio ref={audioRef} src={audioSrc(lec.audio_file)} preload="none" onEnded={() => setPlaying(false)} onPause={() => setPlaying(false)} onPlay={() => setPlaying(true)} />
+            <button className="btn btn-ghost" onClick={() => { if (audioRef.current) { if (playing) audioRef.current.pause(); else audioRef.current.play(); } }}>
+              {playing ? 'Pause' : 'Play'}
+            </button>
           </div>
         )}
       </div>
