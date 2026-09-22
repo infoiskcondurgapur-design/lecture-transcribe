@@ -45,7 +45,12 @@ CREATE TABLE IF NOT EXISTS settings (
 );
 `;
 
-await client.executeMultiple(SCHEMA);
+let _ready = false;
+async function ensureSchema() {
+  if (_ready) return;
+  await client.executeMultiple(SCHEMA);
+  _ready = true;
+}
 
 function toObject(rs, row) {
   const obj = {};
@@ -54,16 +59,19 @@ function toObject(rs, row) {
 }
 
 export async function all(sql, args = []) {
+  await ensureSchema();
   const rs = await client.execute({ sql, args });
   return rs.rows.map((row) => toObject(rs, row));
 }
 
 export async function get(sql, args = []) {
+  await ensureSchema();
   const rows = await all(sql, args);
   return rows[0];
 }
 
 export async function run(sql, args = []) {
+  await ensureSchema();
   const rs = await client.execute({ sql, args });
   return {
     lastInsertRowid: Number(rs.lastInsertRowid ?? 0),
