@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { api, formatDate } from '../api';
-import BookmarkBtn from '../components/BookmarkBtn';
+import LectureList from '../components/LectureList';
 
 export default function Home() {
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
   const [bookmarkIds, setBookmarkIds] = useState([]);
+  const [progressIds, setProgressIds] = useState([]);
 
   useEffect(() => {
     api.stats().then(setStats).catch(() => {});
@@ -17,8 +18,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    api.stats().then(setStats).catch(() => {});
-    api.lectures({ limit: 5 }).then((r) => setRecent(r.records)).catch(() => {});
+    api.getProgress().then((r) => setProgressIds(r.ids || [])).catch(() => {});
   }, []);
 
   const topTypes = (stats?.byType || []).slice(0, 4);
@@ -74,24 +74,7 @@ export default function Home() {
         <a href="/transcriptions">View all transcriptions &rarr;</a>
       </div>
 
-      {recent.length === 0 ? (
-        <div className="panel empty">No lectures yet. Add the first one from the Admin area.</div>
-      ) : (
-        recent.map((lec) => (
-          <div className="lecture-row" key={lec.id}>
-            <span className="play-ic" aria-hidden="true">{lec.audio_file ? '\u25B6' : '\u270E'}</span>
-            <div className="info">
-              <a className="title-link" href={'/lecture/' + lec.id}>{lec.title}</a>
-              <div className="meta">
-                <span className="tag">{lec.type}</span>
-                {formatDate(lec.date) && <span>{formatDate(lec.date)}</span>}
-                {lec.location && <span>&#9873; {lec.location}</span>}
-              </div>
-            </div>
-            <BookmarkBtn lectureId={lec.id} initial={bookmarkIds.includes(lec.id)} />
-          </div>
-        ))
-      )}
+      <LectureList lectures={recent} bookmarkIds={bookmarkIds} progressIds={progressIds} onToggle={() => api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {})} />
     </div>
   );
 }

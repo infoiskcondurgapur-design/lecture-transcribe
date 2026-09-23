@@ -263,6 +263,10 @@ a:hover { text-decoration: underline; }
   background: #efe9dc;
   color: var(--muted);
 }
+.tag-ok {
+  background: #e6f4ea;
+  color: #2d6a4f;
+}
 .audio-chip {
   display: inline-flex;
   align-items: center;

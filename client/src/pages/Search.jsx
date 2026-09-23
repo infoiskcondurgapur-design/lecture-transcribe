@@ -10,12 +10,17 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
   const [bookmarkIds, setBookmarkIds] = useState([]);
+  const [progressIds, setProgressIds] = useState([]);
 
   const q = params.get('q') || '';
   const page = parseInt(params.get('page'), 10) || 1;
 
   useEffect(() => {
     api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    api.getProgress().then((r) => setProgressIds(r.ids || [])).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -66,7 +71,7 @@ export default function Search() {
               {` `}for &ldquo;{q}&rdquo;
             </h2>
           </div>
-          <LectureList lectures={data.records} bookmarkIds={bookmarkIds} />
+          <LectureList lectures={data.records} bookmarkIds={bookmarkIds} progressIds={progressIds} onToggle={() => api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {})} />
           {totalPages > 1 && (
             <div className="pagination">
               <button disabled={page <= 1} onClick={() => setParams({ q, page: String(page - 1) })}>&laquo;</button>

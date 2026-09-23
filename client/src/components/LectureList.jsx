@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { formatDate } from '../api';
 import BookmarkBtn from './BookmarkBtn';
+import ProgressIndicator from './ProgressIndicator';
 
-export default function LectureList({ lectures, bookmarkIds }) {
-  const ids = bookmarkIds ? new Set(bookmarkIds) : new Set();
+export default function LectureList({ lectures, bookmarkIds, progressIds, onToggle }) {
+  const bookmarkSet = bookmarkIds ? new Set(bookmarkIds) : new Set();
+  const progressSet = progressIds ? new Set(progressIds) : new Set();
   if (!lectures || lectures.length === 0) {
     return <div className="empty">No lectures found.</div>;
   }
@@ -29,9 +31,12 @@ export default function LectureList({ lectures, bookmarkIds }) {
               ) : (
                 <span className="tag tag-muted">Text only</span>
               )}
+              {progressSet.has(lec.id) && (
+                <span className="tag tag-ok">&#10003; Read</span>
+              )}
             </div>
           </div>
-          <BookmarkBtn lectureId={lec.id} initial={ids.has(lec.id)} />
+          <BookmarkBtn lectureId={lec.id} initial={bookmarkSet.has(lec.id)} onToggle={onToggle} />
         </div>
       ))}
     </div>

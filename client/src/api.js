@@ -41,6 +41,8 @@ export const api = {
   deleteLecture: (id) => request('/lectures/' + id, { method: 'DELETE' }),
   getBookmarks: () => request('/bookmarks'),
   toggleBookmark: (id) => request('/bookmarks/' + id, { method: 'POST' }),
+  getProgress: () => request('/progress'),
+  toggleProgress: (id) => request('/progress', { method: 'POST', body: { id } }),
   uploadAudio: async (file) => {
     const meta = await getMeta();
     if (meta.blobUpload) {

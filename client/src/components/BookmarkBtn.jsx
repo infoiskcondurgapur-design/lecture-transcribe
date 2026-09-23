@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '../api';
 
-export default function BookmarkBtn({ lectureId, initial }) {
+export default function BookmarkBtn({ lectureId, initial, onToggle }) {
   const [marked, setMarked] = useState(initial);
   return (
     <button
@@ -11,6 +11,7 @@ export default function BookmarkBtn({ lectureId, initial }) {
         try {
           await api.toggleBookmark(lectureId);
           setMarked(!marked);
+          if (onToggle) onToggle();
         } catch {}
       }}
     >

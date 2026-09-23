@@ -8,12 +8,10 @@ export default function TranscriptDetail() {
   const [lec, setLec] = useState(null);
   const [err, setErr] = useState('');
   const [bookmarked, setBookmarked] = useState(false);
+  const [read, setRead] = useState(false);
 
   useEffect(() => {
-    api
-      .lecture(id)
-      .then((r) => setLec(r.lecture))
-      .catch((e) => setErr(e.message));
+    api.lecture(id).then((r) => setLec(r.lecture)).catch((e) => setErr(e.message));
   }, [id]);
 
   useEffect(() => {
@@ -21,10 +19,12 @@ export default function TranscriptDetail() {
   }, [id]);
 
   useEffect(() => {
-    api
-      .lecture(id)
-      .then((r) => setLec(r.lecture))
-      .catch((e) => setErr(e.message));
+    api.getProgress().then((r) => setRead((r.ids || []).includes(Number(id)))).catch(() => {});
+  }, [id]);
+
+  useEffect(() => {
+    api.toggleProgress(Number(id)).catch(() => {});
+    setRead(true);
   }, [id]);
 
   if (err) return <div className="wrap"><div className="alert alert-error">{err}</div></div>;
@@ -75,6 +75,7 @@ export default function TranscriptDetail() {
           ) : (
             <span className="tag tag-muted">Text only</span>
           )}
+          {read && <span className="tag tag-ok">&#10003; Read</span>}
         </div>
 
         {lec.audio_file && (

@@ -9,6 +9,7 @@ export default function Transcriptions() {
   const [filters, setFilters] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookmarkIds, setBookmarkIds] = useState([]);
+  const [progressIds, setProgressIds] = useState([]);
 
   const page = parseInt(params.get('page'), 10) || 1;
   const active = useMemo(
@@ -27,6 +28,10 @@ export default function Transcriptions() {
 
   useEffect(() => {
     api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    api.getProgress().then((r) => setProgressIds(r.ids || [])).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -148,7 +153,7 @@ export default function Transcriptions() {
           </div>
 
           {loading && <div className="panel empty">Loading lectures&hellip;</div>}
-          {!loading && <LectureList lectures={data?.records} bookmarkIds={bookmarkIds} />}
+          {!loading && <LectureList lectures={data?.records} bookmarkIds={bookmarkIds} progressIds={progressIds} onToggle={() => api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {})} />}
 
           {data && totalPages > 1 && (
             <div className="pagination">
