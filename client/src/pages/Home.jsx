@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
 import { api, formatDate } from '../api';
+import BookmarkBtn from '../components/BookmarkBtn';
 
 export default function Home() {
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
+  const [bookmarkIds, setBookmarkIds] = useState([]);
+
+  useEffect(() => {
+    api.stats().then(setStats).catch(() => {});
+    api.lectures({ limit: 5 }).then((r) => setRecent(r.records)).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {});
+  }, []);
 
   useEffect(() => {
     api.stats().then(setStats).catch(() => {});
@@ -77,6 +88,7 @@ export default function Home() {
                 {lec.location && <span>&#9873; {lec.location}</span>}
               </div>
             </div>
+            <BookmarkBtn lectureId={lec.id} initial={bookmarkIds.includes(lec.id)} />
           </div>
         ))
       )}

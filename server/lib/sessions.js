@@ -40,4 +40,4 @@ function destroySession() {
   /* stateless cookies: nothing to destroy server-side */
 }
 
-export { createSession, getSession, destroySession };
+export { createSession, getSession, destroySession, secret };

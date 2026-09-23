@@ -1,11 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api, formatDate, audioSrc } from '../api';
+import BookmarkBtn from '../components/BookmarkBtn';
 
 export default function TranscriptDetail() {
   const { id } = useParams();
   const [lec, setLec] = useState(null);
   const [err, setErr] = useState('');
+  const [bookmarked, setBookmarked] = useState(false);
+
+  useEffect(() => {
+    api
+      .lecture(id)
+      .then((r) => setLec(r.lecture))
+      .catch((e) => setErr(e.message));
+  }, [id]);
+
+  useEffect(() => {
+    api.getBookmarks().then((r) => setBookmarked((r.ids || []).includes(Number(id)))).catch(() => {});
+  }, [id]);
 
   useEffect(() => {
     api
@@ -69,6 +82,9 @@ export default function TranscriptDetail() {
             <audio controls preload="none" src={audioSrc(lec.audio_file)} />
           </div>
         )}
+        <div style={{ marginTop: 12 }}>
+          <BookmarkBtn lectureId={lec.id} initial={bookmarked} />
+        </div>
       </div>
 
       {lec.excerpt && <p className="muted" style={{ marginTop: 10 }}>{lec.excerpt}</p>}

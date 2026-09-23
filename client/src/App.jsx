@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Transcriptions from './pages/Transcriptions';
 import Search from './pages/Search';
 import TranscriptDetail from './pages/TranscriptDetail';
+import Bookmarks from './pages/Bookmarks';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminEdit from './pages/AdminEdit';
@@ -24,6 +25,7 @@ function Header() {
           </NavLink>
           <NavLink to="/transcriptions">Transcriptions</NavLink>
           <NavLink to="/search">Search</NavLink>
+          <NavLink to="/bookmarks">Bookmarks</NavLink>
         </nav>
       </div>
     </header>
@@ -39,6 +41,7 @@ export default function App() {
         <Route path="/transcriptions" element={<Transcriptions />} />
         <Route path="/search" element={<Search />} />
         <Route path="/lecture/:id" element={<TranscriptDetail />} />
+        <Route path="/bookmarks" element={<Bookmarks />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/new" element={<AdminEdit />} />

@@ -8,6 +8,7 @@ export default function Transcriptions() {
   const [data, setData] = useState(null);
   const [filters, setFilters] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [bookmarkIds, setBookmarkIds] = useState([]);
 
   const page = parseInt(params.get('page'), 10) || 1;
   const active = useMemo(
@@ -22,6 +23,10 @@ export default function Transcriptions() {
 
   useEffect(() => {
     api.filters().then(setFilters).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -143,7 +148,7 @@ export default function Transcriptions() {
           </div>
 
           {loading && <div className="panel empty">Loading lectures&hellip;</div>}
-          {!loading && <LectureList lectures={data?.records} />}
+          {!loading && <LectureList lectures={data?.records} bookmarkIds={bookmarkIds} />}
 
           {data && totalPages > 1 && (
             <div className="pagination">

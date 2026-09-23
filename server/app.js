@@ -4,6 +4,7 @@ import path from 'node:path';
 import { router as authRouter, ensureAdminHash } from './routes/auth.js';
 import { router as lecturesRouter } from './routes/lectures.js';
 import { router as uploadRouter } from './routes/upload.js';
+import { router as bookmarksRouter } from './routes/bookmarks.js';
 
 const REQUIRED_ENV = ['SESSION_SECRET', 'ADMIN_PASSWORD'];
 function validateEnv() {
@@ -30,6 +31,7 @@ export async function createApp() {
   app.use('/api/auth', authRouter(express));
   app.use('/api/lectures', lecturesRouter(express));
   app.use('/api/upload', uploadRouter(express));
+  app.use('/api/bookmarks', bookmarksRouter(express));
 
   app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });

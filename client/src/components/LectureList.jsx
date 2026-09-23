@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { formatDate } from '../api';
+import BookmarkBtn from './BookmarkBtn';
 
-export default function LectureList({ lectures }) {
+export default function LectureList({ lectures, bookmarkIds }) {
+  const ids = bookmarkIds ? new Set(bookmarkIds) : new Set();
   if (!lectures || lectures.length === 0) {
     return <div className="empty">No lectures found.</div>;
   }
@@ -29,6 +31,7 @@ export default function LectureList({ lectures }) {
               )}
             </div>
           </div>
+          <BookmarkBtn lectureId={lec.id} initial={ids.has(lec.id)} />
         </div>
       ))}
     </div>

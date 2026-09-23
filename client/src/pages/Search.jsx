@@ -9,9 +9,14 @@ export default function Search() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
+  const [bookmarkIds, setBookmarkIds] = useState([]);
 
   const q = params.get('q') || '';
   const page = parseInt(params.get('page'), 10) || 1;
+
+  useEffect(() => {
+    api.getBookmarks().then((r) => setBookmarkIds(r.ids || [])).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!q) {
@@ -61,7 +66,7 @@ export default function Search() {
               {` `}for &ldquo;{q}&rdquo;
             </h2>
           </div>
-          <LectureList lectures={data.records} />
+          <LectureList lectures={data.records} bookmarkIds={bookmarkIds} />
           {totalPages > 1 && (
             <div className="pagination">
               <button disabled={page <= 1} onClick={() => setParams({ q, page: String(page - 1) })}>&laquo;</button>
