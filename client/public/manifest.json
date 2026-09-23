@@ -1,0 +1,22 @@
+{
+  "name": "Lecture Transcription Archive",
+  "short_name": "Lecture Archive",
+  "description": "Browse, listen, and read transcripts of lectures and conversations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f5ef",
+  "theme_color": "#7f1d1d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
