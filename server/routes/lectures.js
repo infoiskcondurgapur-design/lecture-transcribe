@@ -47,12 +47,15 @@ function buildQuery(query) {
   }
   if (has_audio === 'yes') conditions.push("l.audio_file != ''");
   if (has_audio === 'no') conditions.push("l.audio_file = ''");
+  let useFts = false;
   if (q) {
-    const like = `%${String(q).trim()}%`;
-    conditions.push(
-      '(l.title LIKE ? OR l.excerpt LIKE ? OR l.transcript LIKE ? OR l.speaker LIKE ?)'
-    );
-    args.push(like, like, like, like);
+    const trimmed = String(q).trim();
+    if (trimmed) {
+      conditions.push('lectures_fts MATCH ?');
+      args.push(trimmed);
+      from.push('JOIN lectures_fts ON lectures_fts.rowid = l.id');
+      useFts = true;
+    }
   }
 
   return {
@@ -60,6 +63,7 @@ function buildQuery(query) {
     from: from.join(' '),
     args,
     where: conditions.length ? 'WHERE ' + conditions.join(' AND ') : '',
+    useFts,
   };
 }
 
@@ -70,11 +74,12 @@ export function router(express) {
   r.get('/', async (req, res) => {
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 12));
-    const { conditions, from, args, where } = buildQuery(req.query);
+    const { conditions, from, args, where, useFts } = buildQuery(req.query);
 
     const total = await get(`SELECT COUNT(*) AS c FROM ${from} ${where}`, args);
+    const orderBy = useFts ? 'rank DESC' : "COALESCE(l.date,''), l.id DESC";
     const rows = await all(
-      `SELECT l.* FROM ${from} ${where} ORDER BY COALESCE(l.date,'') DESC, l.id DESC LIMIT ? OFFSET ?`,
+      `SELECT l.* FROM ${from} ${where} ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
       [...args, limit, (page - 1) * limit]
     );
 
