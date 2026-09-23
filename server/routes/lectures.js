@@ -79,7 +79,7 @@ export function router(express) {
     const total = await get(`SELECT COUNT(*) AS c FROM ${from} ${where}`, args);
     const orderBy = useFts ? 'rank DESC' : "COALESCE(l.date,''), l.id DESC";
     const rows = await all(
-      `SELECT l.* FROM ${from} ${where} ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
+      `SELECT ${useFts ? 'l.*, rank' : 'l.*'} FROM ${from} ${where} ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
       [...args, limit, (page - 1) * limit]
     );
 
